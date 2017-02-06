@@ -32,12 +32,6 @@ import java.util.ArrayList;
 
 public class MediaController {
 
-    public enum MediaControllerProgress {
-        VideoPreparingFailed,
-        VideoPreparingStarted,
-        VideoNewChunkAvailable
-    }
-
     private final static String MIME_TYPE = "video/avc";
     private final static int PROCESSOR_TYPE_OTHER = 0;
     private final static int PROCESSOR_TYPE_QCOM = 1;
