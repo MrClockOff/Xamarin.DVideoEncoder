@@ -5,5 +5,5 @@ package org.telegram.messenger;
  */
 
 public interface MediaControllerProgressListener {
-    void OnConvertVideoProgress(MediaController.MediaControllerProgress progress, VideoEditedInfo videoEditedInfo, long totalConverted);
+    void OnConvertVideoProgress(MediaControllerProgress progress, VideoEditedInfo videoEditedInfo, long totalConverted);
 }
