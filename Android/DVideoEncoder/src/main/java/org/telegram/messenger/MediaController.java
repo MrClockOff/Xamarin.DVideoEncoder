@@ -32,6 +32,13 @@ import java.util.ArrayList;
 
 public class MediaController {
 
+    private enum EventType {
+        Failed,
+        Started,
+        NewChunkAvailable,
+        Finished
+    }
+
     private final static String MIME_TYPE = "video/avc";
     private final static int PROCESSOR_TYPE_OTHER = 0;
     private final static int PROCESSOR_TYPE_QCOM = 1;
@@ -190,12 +197,12 @@ public class MediaController {
             videoConvertFirstWrite = false;
         }
         if (error) {
-            invokeProgressListener(MediaControllerProgress.VideoPreparingFailed, videoEditedInfo, 0);
+            invokeProgressListener(EventType.Failed, videoEditedInfo, 0);
         } else {
             if (firstWrite) {
-                invokeProgressListener(MediaControllerProgress.VideoPreparingStarted, videoEditedInfo, 0);
+                invokeProgressListener(EventType.Started, videoEditedInfo, 0);
             }
-            invokeProgressListener(MediaControllerProgress.VideoNewChunkAvailable, videoEditedInfo, last ? file.length() : 0);
+            invokeProgressListener(last ? EventType.Finished : EventType.NewChunkAvailable, videoEditedInfo, last ? file.length() : 0);
         }
         if (error || last) {
             synchronized (videoConvertSync) {
@@ -761,9 +768,24 @@ public class MediaController {
         return true;
     }
 
-    private void invokeProgressListener(MediaControllerProgress progress, VideoEditedInfo videoEditedInfo, long totalConverted) {
+    private void invokeProgressListener(EventType eventType, VideoEditedInfo videoEditedInfo, long totalConverted) {
         for (MediaControllerProgressListener listener : _progressListeners) {
-            listener.OnConvertVideoProgress(progress, videoEditedInfo, totalConverted);
+            switch (eventType) {
+                case Failed:
+                    listener.onConvertVideoFailed(videoEditedInfo);
+                    break;
+                case Started:
+                    listener.onConvertVideoStarted(videoEditedInfo);
+                    break;
+                case NewChunkAvailable:
+                    listener.onConvertVideoNewChunkAvailable(videoEditedInfo);
+                    break;
+                case Finished:
+                    listener.onConvertVideoFinished(videoEditedInfo, totalConverted);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -775,7 +797,7 @@ public class MediaController {
         Log.e(tag, message);
 
         for(MediaControllerLogListener listener : _logListeners) {
-            listener.OnLogMessage(message);
+            listener.onLogMessage(message);
         }
     }
 }

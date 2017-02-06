@@ -5,5 +5,5 @@ package org.telegram.messenger;
  */
 
 public interface MediaControllerLogListener {
-    void OnLogMessage(String message);
+    void onLogMessage(String message);
 }
