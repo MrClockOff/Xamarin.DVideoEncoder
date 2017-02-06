@@ -55,5 +55,8 @@
   <ItemGroup>
     <LibraryProjectZip Include="Jars\DVideoEncoder-release.aar" />
   </ItemGroup>
+  <ItemGroup>
+    <ReferenceJar Include="Jars\isoparser-1.0.6.jar" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.Bindings.targets" />
 </Project>
